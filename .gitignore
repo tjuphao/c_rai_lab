@@ -1,0 +1,3 @@
+# Ignore build artifacts and object files
+build/
+*.o
