@@ -4,7 +4,8 @@ CC = gcc
 # -O0    : no optimization
 # -Wall  : show warnings
 # -Iinclude : include header directory
-CFLAGS = -g -O0 -Wall -Iinclude
+# -pg    : enable profiling with gprof
+CFLAGS = -g -O0 -Wall -Iinclude -pg
 # Build all c files in src directory 
 SRC = $(wildcard src/*.c)
 #output to build/main
@@ -18,4 +19,4 @@ run: all
 	./$(OUT)
 
 clean:
-	rm -rf build
+	rm -rf build gmon.out
