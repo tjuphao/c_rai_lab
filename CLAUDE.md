@@ -359,6 +359,7 @@ Every generated test case must include a comment block immediately above the `TE
 
 ```
 /* Test ID: <unix_timestamp>
+ * Requirement: <REQ-ID from Requirements.csv, or N/A - <rule ref> if no direct requirement>.
  * Description: <one sentence stating what is being verified>.
  * Input: <list each parameter and its value>.
  * Expected: <return value and output parameter value, where applicable>. */
@@ -367,16 +368,28 @@ Every generated test case must include a comment block immediately above the `TE
 ### Rules
 
 - **Test ID** — use the Unix timestamp (seconds since epoch) at the time of generation. Each test case must have a unique value; increment by 1 for each subsequent test in the same session.
+- **Requirement** — reference the ID from `Requirements.csv` (e.g., `REQ-2604091434`). If a test case covers a defensive programming rule rather than a functional requirement, write `N/A - <rule reference>` (e.g., `N/A - UF_C3_003 NULL pointer check`). Multiple IDs may be listed separated by commas.
 - **Description** — one sentence beginning with "Verify" that describes the condition under test.
 - **Input** — list every parameter passed to the function under test, including pointer state (e.g., `resultPtr=valid pointer` or `resultPtr=NULL`).
 - **Expected** — state the expected return value and, where the function writes through a pointer, the expected output value.
 - Every test file shall include a revision history header. AI-generated test additions shall be labelled `[AI-ASSISTED]` in the revision history.
 - Test cases shall be grouped by function under a `// <function_name>()` section comment.
 
+### Requirements Traceability
+
+After generating test cases, `requirements/Requirements.csv` must be updated to map each test case ID to its corresponding requirement:
+
+- Add a `Test Case ID` column to `Requirements.csv` if it does not already exist.
+- For each functional requirement row, populate the `Test Case ID` column with the unix timestamp IDs of all test cases that verify it. Separate multiple IDs with `;`.
+- If a requirement is incomplete or has no test case assigned, write `TODO - <reason>` in the `Test Case ID` column.
+- Information rows (non-requirement rows) shall be left blank in the `Test Case ID` column.
+- Test cases that cover only defensive programming rules (no direct requirement) shall not be mapped to any requirement row.
+
 ### Example
 
 ```cpp
 /* Test ID: 1775739600
+ * Requirement: REQ-2604091434, REQ-2604091436
  * Description: Verify add() returns success for two positive integers.
  * Input: a=2, b=3, resultPtr=valid pointer.
  * Expected: return value=0, result=5. */
