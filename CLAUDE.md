@@ -1,18 +1,18 @@
-# GitHub Copilot Governance Instructions for Safety-Critical Railway Software
+# Claude Code Governance Instructions for Safety-Critical Railway Software
 ## VATC (VATP, VATO) Subsystem — Coding Standard: Guideline 1DOC-1101133 Rev 1/A
 
 ---
 
 ## Purpose
 
-This file instructs GitHub Copilot on the coding standards, naming conventions, and safety governance rules that must be followed when generating or suggesting code for the VATC (VATP, VATO) subsystem. All suggestions must comply with the Cityflo Software Development Process, MISRA C:2012, and EN 50128 requirements.
+This file instructs Claude Code on the coding standards, naming conventions, and safety governance rules that must be followed when generating or suggesting code for the VATC (VATP, VATO) subsystem. All suggestions must comply with the Cityflo Software Development Process, MISRA C:2012, and EN 50128 requirements.
 
 ---
 
 ## 1. AI Governance — Hallucination Prevention
 
 - **Do not generate logic that cannot be traced to an explicit requirement.** Every function, conditional branch, and return value must correspond to a documented system or software requirement.
-- **Flag unverifiable assumptions.** If context is insufficient to determine safe behavior, insert a `/* TODO - CopilotReview: Verify logic against requirement <REQ-ID> */` comment rather than guessing.
+- **Flag unverifiable assumptions.** If context is insufficient to determine safe behavior, insert a `/* TODO - ClaudeReview: Verify logic against requirement <REQ-ID> */` comment rather than guessing.
 - **Do not auto-complete failure handling.** Safety-critical error paths must be explicitly specified; do not infer default error behavior.
 - **Do not suppress compiler warnings.** Never suggest pragmas or casts that silence warnings without an accompanying justification comment.
 - **Mark all AI-generated code blocks** with a comment: `/* AI-GENERATED: Review required before integration */`
@@ -216,4 +216,4 @@ The following conventions apply to all VATC (VATP, VATO) code. New code must adh
 
 ---
 
-*This file is based on Cityflo Programming Style Guideline 1DOC-1101133, Version 1/A (2023-07-13) and the GitHub Copilot Railway Safety Governance Framework.*
+*This file is based on Cityflo Programming Style Guideline 1DOC-1101133, Version 1/A (2023-07-13) and the AI-Assisted Development Railway Safety Governance Framework.*
