@@ -353,6 +353,42 @@ The following conventions apply to all VATC (VATP, VATO) code. New code must adh
 
 ---
 
+## 13. Unit Test Standards
+
+Every generated test case must include a comment block immediately above the `TEST()` macro with the following fields:
+
+```
+/* Test ID: <unix_timestamp>
+ * Description: <one sentence stating what is being verified>.
+ * Input: <list each parameter and its value>.
+ * Expected: <return value and output parameter value, where applicable>. */
+```
+
+### Rules
+
+- **Test ID** — use the Unix timestamp (seconds since epoch) at the time of generation. Each test case must have a unique value; increment by 1 for each subsequent test in the same session.
+- **Description** — one sentence beginning with "Verify" that describes the condition under test.
+- **Input** — list every parameter passed to the function under test, including pointer state (e.g., `resultPtr=valid pointer` or `resultPtr=NULL`).
+- **Expected** — state the expected return value and, where the function writes through a pointer, the expected output value.
+- Every test file shall include a revision history header. AI-generated test additions shall be labelled `[AI-ASSISTED]` in the revision history.
+- Test cases shall be grouped by function under a `// <function_name>()` section comment.
+
+### Example
+
+```cpp
+/* Test ID: 1775739600
+ * Description: Verify add() returns success for two positive integers.
+ * Input: a=2, b=3, resultPtr=valid pointer.
+ * Expected: return value=0, result=5. */
+TEST(HelloGroup, AddPositiveNumbers) {
+    INT_64 result = 0;
+    CHECK_EQUAL(0, add(2, 3, &result));
+    CHECK_EQUAL(5, result);
+}
+```
+
+---
+
 *This file is based on:*
 - *C Coding Style Guide — Version 1/A (2023-07-13)*
 - *C Coding Standards — Version 2/A (2025-12-04)*
