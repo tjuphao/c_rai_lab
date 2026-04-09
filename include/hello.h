@@ -18,6 +18,7 @@
 #include <stdint.h>
 
 typedef int64_t INT_64;
+typedef double DOUBLE;
 
 void say_hello(void);
 int add(INT_64 a, INT_64 b, INT_64 *resultPtr);

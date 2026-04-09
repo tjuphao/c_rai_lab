@@ -1,11 +1,17 @@
 ID (yyddmmhhmm),Type,Description,Test Case ID
 2604091427,Information,Main menu,
 2604091428,Information,Subtraction,
-2604091429,requirement,The subtraction operation shall accept only integer values.,1775739609; 1775739610; 1775739614
-2604091430,requirement,The subtraction operation shall support integer values up to 64 bits.,1775739612; 1775739613; 1775739614
+2604091429,requirement,The subtraction operation shall accept only integer values.,1775739610; 1775739611; 1775739615
+2604091430,requirement,The subtraction operation shall support integer values up to 64 bits.,1775739613; 1775739614; 1775739615
 2604091431,requirement,The subtraction operation shall accept only,TODO - Requirement incomplete; no test case assigned
-2604091432,requirement,The subtraction operation shall support up to two values.,1775739609; 1775739610
+2604091432,requirement,The subtraction operation shall support up to two values.,1775739610; 1775739611
 2604091433,Information,Addition,
 2604091434,requirement,The addition operation shall accept only integer values.,1775739600; 1775739601; 1775739605
 2604091435,requirement,The addition operation shall support integer values up to 64 bits.,1775739603; 1775739604; 1775739605
 2604091436,requirement,The addition operation shall support up to two values.,1775739600; 1775739601
+2604091917,Information,Division,
+2604091918,requirement,The division operation shall accept only integer values.,1775739606; 1775739607
+2604091919,requirement,The division operation shall support integer values up to 64 bits.,1775739606; 1775739607
+2604091920,requirement,The division operation shall accept up to two input values.,1775739606; 1775739607
+2604091921,requirement,If a remainder exists then the result shall be displayed with two decimal places.,1775739607
+2604091922,requirement,If no remainder exists then the result shall be displayed without decimal places.,1775739606
