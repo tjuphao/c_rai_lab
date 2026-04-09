@@ -1,0 +1,7 @@
+﻿ID,Type,Description
+1,Information,Main menu
+2,Information,Subtraction 
+3,requirement,The subtraction operation shall accept only integer numbers.
+4,requirement,The subtraction operation shall support integer values up to 64 bits.
+5,requirement,The subtraction operation shall accept only 
+6,requirement,The subtraction operation shall support up to two values.
