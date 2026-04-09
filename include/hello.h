@@ -9,6 +9,7 @@
  * 1.1.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add divide() declaration
  * 1.2.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add INT_64 typedef and subtract()
  *         |            |                       | declaration with overflow detection
+ * 1.3.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Update add() to INT_64 signature
  */
 
 #ifndef HELLO_H
@@ -19,7 +20,7 @@
 typedef int64_t INT_64;
 
 void say_hello(void);
-int add(int a, int b);
+int add(INT_64 a, INT_64 b, INT_64 *resultPtr);
 int divide(int a, int b, int *resultPtr);
 int subtract(INT_64 a, INT_64 b, INT_64 *resultPtr);
 

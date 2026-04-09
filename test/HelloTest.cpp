@@ -10,6 +10,8 @@
  *         |            |                       | underflow, and NULL pointer checks
  * 1.2.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add SubtractNegativeSubtrahendNoOverflow
  *         |            |                       | to achieve 100% MC/DC branch coverage
+ * 1.3.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Update add() tests for INT_64 signature;
+ *         |            |                       | add overflow, underflow, NULL pointer checks
  */
 
 #include "CppUTest/TestHarness.h"
@@ -22,11 +24,35 @@ TEST_GROUP(HelloGroup) {};
 
 // add()
 TEST(HelloGroup, AddPositiveNumbers) {
-    CHECK_EQUAL(5, add(2, 3));
+    INT_64 result = 0;
+    CHECK_EQUAL(0, add(2, 3, &result));
+    CHECK_EQUAL(5, result);
 }
 
 TEST(HelloGroup, AddNegativeNumbers) {
-    CHECK_EQUAL(-1, add(-3, 2));
+    INT_64 result = 0;
+    CHECK_EQUAL(0, add(-3, 2, &result));
+    CHECK_EQUAL(-1, result);
+}
+
+TEST(HelloGroup, AddNullPtrReturnsError) {
+    CHECK_EQUAL(-1, add(2, 3, NULL));
+}
+
+TEST(HelloGroup, AddOverflowReturnsError) {
+    INT_64 result = 0;
+    CHECK_EQUAL(-1, add(INT64_MAX, 1, &result));
+}
+
+TEST(HelloGroup, AddUnderflowReturnsError) {
+    INT_64 result = 0;
+    CHECK_EQUAL(-1, add(INT64_MIN, -1, &result));
+}
+
+TEST(HelloGroup, AddNegativeAddendNoUnderflow) {
+    INT_64 result = 0;
+    CHECK_EQUAL(0, add(5, -3, &result));
+    CHECK_EQUAL(2, result);
 }
 
 // divide()

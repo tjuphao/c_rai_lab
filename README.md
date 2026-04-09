@@ -99,8 +99,8 @@ make test
 Example output:
 
 ```
-...........
-OK (11 tests, 11 ran, 17 checks, 0 ignored, 0 filtered out, 0 ms)
+...............
+OK (15 tests, 15 ran, 22 checks, 0 ignored, 0 filtered out, 0 ms)
 Report saved to build/cpputest_HelloGroup.xml
 ```
 
@@ -174,8 +174,12 @@ Tests are written in C++ using CppUTest and located in `test/HelloTest.cpp`.
 
 | Test Name                              | Function      | Description                                        |
 |----------------------------------------|---------------|----------------------------------------------------|
-| `AddPositiveNumbers`                   | `add()`       | Verifies 2 + 3 = 5                                 |
-| `AddNegativeNumbers`                   | `add()`       | Verifies -3 + 2 = -1                               |
+| `AddPositiveNumbers`                   | `add()`       | Verifies 2 + 3 = 5, returns 0                     |
+| `AddNegativeNumbers`                   | `add()`       | Verifies -3 + 2 = -1, returns 0                   |
+| `AddNullPtrReturnsError`               | `add()`       | Verifies NULL result pointer returns -1            |
+| `AddOverflowReturnsError`              | `add()`       | Verifies INT64_MAX + 1 returns -1 (overflow)       |
+| `AddUnderflowReturnsError`             | `add()`       | Verifies INT64_MIN + (-1) returns -1 (underflow)   |
+| `AddNegativeAddendNoUnderflow`         | `add()`       | Verifies 5 + (-3) = 2, no underflow, returns 0    |
 | `DivideSuccess`                        | `divide()`    | Verifies 10 / 2 = 5, returns 0                    |
 | `DivideByZeroReturnsError`             | `divide()`    | Verifies b=0 returns -1                            |
 | `DivideNullPtrReturnsError`            | `divide()`    | Verifies NULL result pointer returns -1            |
@@ -216,3 +220,4 @@ AI-generated code is marked with `/* AI-GENERATED: Review required before integr
 | 1.3.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add lcov coverage target                           |
 | 1.4.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add MC/DC coverage target (make mcdc, GCC 14)      |
 | 1.5.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add subtract() with overflow/underflow detection   |
+| 1.6.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Update add() to INT_64 with overflow/underflow     |
