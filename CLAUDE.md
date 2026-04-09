@@ -1,11 +1,12 @@
 # Claude Code Governance Instructions for Safety-Critical Railway Software
-## VATC (VATP, VATO) Subsystem — Coding Standard: Guideline 1DOC-1101133 Rev 1/A
+## VATC (VATP, VATO) Subsystem
+### Coding Style Guide Rev 1/A | C Coding Standards Rev 2/A
 
 ---
 
 ## Purpose
 
-This file instructs Claude Code on the coding standards, naming conventions, and safety governance rules that must be followed when generating or suggesting code for the VATC (VATP, VATO) subsystem. All suggestions must comply with the Cityflo Software Development Process, MISRA C:2012, and EN 50128 requirements.
+This file instructs Claude Code on the coding standards, naming conventions, and safety governance rules that must be followed when generating or suggesting code for the VATC (VATP, VATO) subsystem. All suggestions must comply with the Software Development Process, MISRA C:2012, and EN 50128 requirements.
 
 ---
 
@@ -205,7 +206,143 @@ The following conventions apply to all VATC (VATP, VATO) code. New code must adh
 
 ---
 
-## 10. Safety and Traceability Requirements
+## 10. Defensive Programming
+
+- **Integer overflow/underflow** — Before performing arithmetic on fixed-width integer types, check that the result will not exceed the type's range using `<stdint.h>` limits (e.g., `INT64_MIN`, `INT64_MAX`). `[UF_C14_004 / MISRA Rule 12.4]`
+- **NULL pointer validation** — All pointer parameters shall be checked against `NULL` before dereferencing. Return an error code (`-1`) if `NULL` is detected. `[UF_C3_003 / MISRA Rule 1.3]`
+- **Error-code pattern** — Functions that can produce invalid results shall return `int` (0 = success, -1 = error) and write the result through an output pointer parameter (`*resultPtr`).
+- **Return value checking** — Every call to a function returning an error code shall check the return value. Silent discard is not permitted. `[UF_C2_005 / MISRA Dir 4.7]`
+- **No silent failures** — Do not use an arithmetic result that could not be validated. Return an error and leave the output pointer unchanged.
+- **Variables must be initialized before use** — The value of an object with automatic storage shall not be read before it has been set. `[UF_C11_001 / MISRA Rule 9.1]`
+
+---
+
+## 11. C Coding Rules — Rev 2/A
+
+### 11.1 Compilation and Build
+
+| Rule ID    | Description                                             | MISRA Ref |
+|------------|---------------------------------------------------------|-----------|
+| UF_C1_001  | All source files shall compile without any errors       | Dir 2.1   |
+
+### 11.2 Code Design
+
+| Rule ID    | Description                                                                  | MISRA Ref |
+|------------|------------------------------------------------------------------------------|-----------|
+| UF_C2_002  | Sections of code shall not be commented out                                  | Dir 4.4   |
+| UF_C2_004  | `typedef`s indicating size and signedness shall be used instead of basic numerical types | Dir 4.6 |
+| UF_C2_005  | If a function returns error information, that error information shall be tested | Dir 4.7 |
+| UF_C2_007  | A function shall be used in preference to a function-like macro where interchangeable | Dir 4.9 |
+| UF_C2_008  | Header file contents shall be protected against multiple inclusion           | Dir 4.10  |
+
+### 11.3 Unused Code
+
+| Rule ID    | Description                                              | MISRA Ref |
+|------------|----------------------------------------------------------|-----------|
+| UF_C4_001  | A project shall not contain unreachable code             | Rule 2.1  |
+| UF_C4_002  | There shall be no dead code                              | Rule 2.2  |
+| UF_C4_007  | There should be no unused parameters in functions        | Rule 2.7  |
+
+### 11.4 Types
+
+| Rule ID    | Description                                                                  | MISRA Ref |
+|------------|------------------------------------------------------------------------------|-----------|
+| UF_C8_001  | Bit-fields shall only be declared with an appropriate type                   | Rule 6.1  |
+| UF_C10_001 | Types shall be explicitly specified                                          | Rule 8.1  |
+| UF_C10_002 | Function types shall be in prototype form with named parameters              | Rule 8.2  |
+| UF_C10_013 | A pointer should point to a `const`-qualified type whenever possible         | Rule 8.13 |
+| UF_C12_001 | Operands shall not be of an inappropriate essential type                     | Rule 10.1 |
+| UF_C12_003 | An expression value shall not be assigned to an object of a narrower or different essential type | Rule 10.3 |
+
+### 11.5 Literals and Constants
+
+| Rule ID    | Description                                             | MISRA Ref |
+|------------|---------------------------------------------------------|-----------|
+| UF_C9_001  | Octal constants shall not be used                       | Rule 7.1  |
+| UF_C9_002  | A `U`/`u` suffix shall be applied to all unsigned integer constants | Rule 7.2 |
+| UF_C9_003  | The lowercase `l` shall not be used in a literal suffix | Rule 7.3  |
+
+### 11.6 Initialization
+
+| Rule ID    | Description                                                          | MISRA Ref |
+|------------|----------------------------------------------------------------------|-----------|
+| UF_C11_001 | The value of an object shall not be read before it has been set      | Rule 9.1  |
+| UF_C11_002 | Initializers for aggregates or unions shall be enclosed in braces    | Rule 9.2  |
+| UF_C11_003 | Arrays shall not be partially initialized                            | Rule 9.3  |
+
+### 11.7 Expressions
+
+| Rule ID    | Description                                                                 | MISRA Ref |
+|------------|-----------------------------------------------------------------------------|-----------|
+| UF_C14_001 | Operator precedence within expressions shall be made explicit with parentheses | Rule 12.1 |
+| UF_C14_002 | Right-hand operand of a shift operator shall lie in range `[0, width-1]`   | Rule 12.2 |
+| UF_C14_003 | The comma operator shall not be used                                        | Rule 12.3 |
+| UF_C14_004 | Evaluation of constant expressions shall not lead to unsigned integer wrap-around | Rule 12.4 |
+
+### 11.8 Control Flow
+
+| Rule ID    | Description                                                          | MISRA Ref |
+|------------|----------------------------------------------------------------------|-----------|
+| UF_C16_004 | Controlling expressions of `if` and iteration statements shall have essentially Boolean type | Rule 14.4 |
+| UF_C17_001 | The `goto` statement shall not be used                               | Rule 15.1 |
+| UF_C17_005 | A function shall have a single point of exit at the end              | Rule 15.5 |
+| UF_C17_006 | The body of an iteration or selection statement shall be a compound statement | Rule 15.6 |
+| UF_C17_007 | All `if … else if` constructs shall be terminated with an `else` statement | Rule 15.7 |
+
+### 11.9 Switch Statements
+
+| Rule ID    | Description                                                          | MISRA Ref |
+|------------|----------------------------------------------------------------------|-----------|
+| UF_C18_001 | All switch statements shall be well-formed                           | Rule 16.1 |
+| UF_C18_003 | An unconditional `break` statement shall terminate every switch-clause | Rule 16.3 |
+| UF_C18_004 | Every switch statement shall have a `default` label                  | Rule 16.4 |
+| UF_C18_005 | The `default` label shall appear as the first or last switch label   | Rule 16.5 |
+| UF_C18_006 | Every switch statement shall have at least two switch-clauses        | Rule 16.6 |
+
+### 11.10 Functions
+
+| Rule ID    | Description                                                                   | MISRA Ref |
+|------------|-------------------------------------------------------------------------------|-----------|
+| UF_C19_001 | The features of `<stdarg.h>` shall not be used                                | Rule 17.1 |
+| UF_C19_002 | Functions shall not call themselves, either directly or indirectly (no recursion) | Rule 17.2 |
+| UF_C19_004 | All exit paths from a non-void function shall have an explicit `return` with an expression | Rule 17.4 |
+| UF_C19_006 | The value returned by a non-void function shall be used                       | Rule 17.7 |
+| UF_C19_007 | A function parameter shall not be modified                                    | Rule 17.8 |
+
+### 11.11 Pointers and Arrays
+
+| Rule ID    | Description                                                          | MISRA Ref |
+|------------|----------------------------------------------------------------------|-----------|
+| UF_C20_005 | Declarations shall contain no more than two levels of pointer nesting | Rule 18.5 |
+| UF_C20_007 | Flexible array members shall not be declared                         | Rule 18.7 |
+| UF_C20_008 | Variable-length array types shall not be used                        | Rule 18.8 |
+
+### 11.12 Overlapping Storage
+
+| Rule ID    | Description                          | MISRA Ref |
+|------------|--------------------------------------|-----------|
+| UF_C21_001 | The `union` keyword shall not be used | Rule 19.2 |
+
+### 11.13 Standard Libraries
+
+| Rule ID    | Description                                                          | MISRA Ref |
+|------------|----------------------------------------------------------------------|-----------|
+| UF_C23_003 | Memory allocation/deallocation functions of `<stdlib.h>` shall not be used | Rule 21.3 |
+| UF_C23_004 | `<setjmp.h>` shall not be used                                       | Rule 21.4 |
+| UF_C23_005 | `<signal.h>` shall not be used                                       | Rule 21.5 |
+| UF_C23_006 | Standard Library input/output functions shall not be used            | Rule 21.6 |
+| UF_C23_007 | `atof`, `atoi`, `atol`, `atoll` of `<stdlib.h>` shall not be used   | Rule 21.7 |
+| UF_C23_008 | `abort`, `exit`, `getenv`, `system` of `<stdlib.h>` shall not be used | Rule 21.8 |
+
+### 11.14 Resources
+
+| Rule ID    | Description                                                             | MISRA Ref |
+|------------|-------------------------------------------------------------------------|-----------|
+| UF_C24_001 | All resources obtained dynamically shall be explicitly released         | Rule 22.1 |
+
+---
+
+## 12. Safety and Traceability Requirements
 
 - Every function generating safety-relevant logic must reference its requirement ID in the header comment (e.g., `/* Implements: SWR-VATP-0042 */`).
 - AI-generated failure handling code must be flagged for human review before integration into the safety baseline.
@@ -216,4 +353,7 @@ The following conventions apply to all VATC (VATP, VATO) code. New code must adh
 
 ---
 
-*This file is based on Cityflo Programming Style Guideline 1DOC-1101133, Version 1/A (2023-07-13) and the AI-Assisted Development Railway Safety Governance Framework.*
+*This file is based on:*
+- *C Coding Style Guide — Version 1/A (2023-07-13)*
+- *C Coding Standards — Version 2/A (2025-12-04)*
+- *AI-Assisted Development Railway Safety Governance Framework*
