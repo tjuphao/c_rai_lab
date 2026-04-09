@@ -1,7 +1,11 @@
-﻿ID,Type,Description
-1,Information,Main menu
-2,Information,Subtraction 
-3,requirement,The subtraction operation shall accept only integer numbers.
-4,requirement,The subtraction operation shall support integer values up to 64 bits.
-5,requirement,The subtraction operation shall accept only 
-6,requirement,The subtraction operation shall support up to two values.
+﻿ID (yyddmmhhmm),Type,Description
+2604091427,Information,Main menu
+2604091428,Information,Subtraction 
+2604091429,requirement,The subtraction operation shall accept only integer values.
+2604091430,requirement,The subtraction operation shall support integer values up to 64 bits.
+2604091431,requirement,The subtraction operation shall accept only 
+2604091432,requirement,The subtraction operation shall support up to two values.
+2604091433,Information,Addition
+2604091434,requirement,The addition operation shall accept only integer values.
+2604091435,requirement,The addition operation shall support integer values up to 64 bits.
+2604091436,requirement,The addition operation shall support up to two values.

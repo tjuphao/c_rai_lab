@@ -1,3 +1,17 @@
+/**
+ * @file hello.c
+ * @brief Implementation of hello module (say_hello, add, divide, subtract).
+ *
+ * Revision History:
+ * Version | Date       | Author                | Description
+ * --------|------------|-----------------------|--------------------------------------
+ * 1.0.0   | 2026-04-09 | tjuphao               | Initial implementation: say_hello, add
+ * 1.1.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add divide() with NULL and div-by-zero
+ *         |            |                       | checks
+ * 1.2.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add subtract() with overflow/underflow
+ *         |            |                       | detection and NULL pointer check
+ */
+
 #include <stdio.h>
 #include "hello.h"
 

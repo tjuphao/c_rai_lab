@@ -9,7 +9,9 @@ A safety-critical C development lab for the vehicle subsystem, following the Sof
 | Tool     | Version  | Purpose                          |
 |----------|----------|----------------------------------|
 | GCC      | 13.3.0   | C compiler                       |
+| GCC-14   | 14.x     | C compiler for MC/DC coverage    |
 | G++      | 13.3.0   | C++ compiler (for CppUTest)      |
+| G++-14   | 14.x     | C++ compiler for MC/DC coverage  |
 | CppUTest | 4.0      | Unit test framework              |
 | LCOV     | 2.0-1    | Code coverage reporting          |
 | genhtml  | 2.0-1    | HTML coverage report generator   |
@@ -17,7 +19,7 @@ A safety-critical C development lab for the vehicle subsystem, following the Sof
 ### Install dependencies
 
 ```bash
-sudo apt-get install -y gcc g++ lcov
+sudo apt-get install -y gcc g++ lcov gcc-14 g++-14
 ```
 
 CppUTest is installed to `/usr/local`. To build from source:
@@ -35,19 +37,23 @@ cmake .. && make && sudo make install
 ```
 c_rai_lab/
 ├── include/
-│   └── hello.h          # Function declarations
+│   └── hello.h          # Function declarations (say_hello, add, divide, subtract)
 ├── src/
-│   ├── hello.c          # Implementation (say_hello, add, divide)
+│   ├── hello.c          # Implementation (add, divide, subtract)
 │   └── main.c           # Application entry point
 ├── test/
 │   ├── AllTests.cpp     # CppUTest runner main
 │   └── HelloTest.cpp    # Unit tests for hello.c
+├── requirements/
+│   └── Requirements.csv # Software requirements
 ├── build/               # All build artefacts (generated)
 │   ├── main             # Application binary
 │   ├── test_runner      # Test binary
 │   ├── coverage_runner  # Coverage-instrumented test binary
+│   ├── mcdc_runner      # MC/DC-instrumented test binary
 │   ├── cpputest_HelloGroup.xml   # JUnit XML test report
-│   └── coverage_report/ # LCOV HTML coverage report
+│   ├── coverage_report/ # LCOV HTML coverage report
+│   └── mcdc_report/     # LCOV MC/DC HTML coverage report
 ├── Makefile
 ├── CLAUDE.md            # AI code governance instructions
 └── README.md
@@ -93,8 +99,8 @@ make test
 Example output:
 
 ```
-.....
-OK (5 tests, 5 ran, 6 checks, 0 ignored, 0 filtered out, 0 ms)
+...........
+OK (11 tests, 11 ran, 17 checks, 0 ignored, 0 filtered out, 0 ms)
 Report saved to build/cpputest_HelloGroup.xml
 ```
 
@@ -118,16 +124,43 @@ xdg-open build/coverage_report/index.html
 Example summary:
 
 ```
-lines......: 72.7% (8 of 11 lines)
-functions..: 66.7% (2 of 3 functions)
-branches...: 100.0% (4 of 4 branches)
+lines......: 100.0% (22 of 22 lines)
+functions..: 100.0% (3 of 3 functions)
+branches...: 100.0% (12 of 12 branches)
 ```
+
+---
+
+### `make mcdc`
+
+Compiles the source and tests with `-fcondition-coverage` (GCC 14 required) for MC/DC coverage, runs the tests, and generates an LCOV HTML MC/DC report.
+
+Produces:
+- `build/mcdc.info` — raw MC/DC coverage data
+- `build/mcdc_filtered.info` — filtered coverage data
+- `build/mcdc_report/index.html` — interactive HTML MC/DC report
+
+```bash
+make mcdc
+# Then open the report:
+xdg-open build/mcdc_report/index.html
+```
+
+Example summary:
+
+```
+lines......: 100.0% (22 of 22 lines)
+functions..: 100.0% (3 of 3 functions)
+branches...: 100.0% (12 of 12 branches)
+```
+
+> **Note:** Requires GCC 14 (`gcc-14`, `g++-14`). The `-fcondition-coverage` flag is not available in earlier GCC versions.
 
 ---
 
 ### `make clean`
 
-Removes all build artefacts including binaries, object files, coverage data, and gprof output.
+Removes all build artefacts including binaries, object files, coverage data, gprof output, and `.gcov` files.
 
 ```bash
 make clean
@@ -139,13 +172,19 @@ make clean
 
 Tests are written in C++ using CppUTest and located in `test/HelloTest.cpp`.
 
-| Test Name                   | Function  | Description                              |
-|-----------------------------|-----------|------------------------------------------|
-| `AddPositiveNumbers`        | `add()`   | Verifies 2 + 3 = 5                       |
-| `AddNegativeNumbers`        | `add()`   | Verifies -3 + 2 = -1                     |
-| `DivideSuccess`             | `divide()`| Verifies 10 / 2 = 5, returns 0          |
-| `DivideByZeroReturnsError`  | `divide()`| Verifies b=0 returns -1                  |
-| `DivideNullPtrReturnsError` | `divide()`| Verifies NULL result pointer returns -1  |
+| Test Name                              | Function      | Description                                        |
+|----------------------------------------|---------------|----------------------------------------------------|
+| `AddPositiveNumbers`                   | `add()`       | Verifies 2 + 3 = 5                                 |
+| `AddNegativeNumbers`                   | `add()`       | Verifies -3 + 2 = -1                               |
+| `DivideSuccess`                        | `divide()`    | Verifies 10 / 2 = 5, returns 0                    |
+| `DivideByZeroReturnsError`             | `divide()`    | Verifies b=0 returns -1                            |
+| `DivideNullPtrReturnsError`            | `divide()`    | Verifies NULL result pointer returns -1            |
+| `SubtractSuccess`                      | `subtract()`  | Verifies 10 - 3 = 7, returns 0                    |
+| `SubtractNegativeResult`               | `subtract()`  | Verifies 3 - 10 = -7, returns 0                   |
+| `SubtractNullPtrReturnsError`          | `subtract()`  | Verifies NULL result pointer returns -1            |
+| `SubtractUnderflowReturnsError`        | `subtract()`  | Verifies INT64_MIN - 1 returns -1 (underflow)      |
+| `SubtractOverflowReturnsError`         | `subtract()`  | Verifies INT64_MAX - (-1) returns -1 (overflow)    |
+| `SubtractNegativeSubtrahendNoOverflow` | `subtract()`  | Verifies 5 - (-3) = 8, no overflow, returns 0     |
 
 ---
 
@@ -169,9 +208,11 @@ AI-generated code is marked with `/* AI-GENERATED: Review required before integr
 
 ## Revision History
 
-| Version | Date       | Author                | Description                              |
-|---------|------------|-----------------------|------------------------------------------|
-| 1.0.0   | 2026-04-09 | tjuphao               | Initial build with gcc, gprof profiling  |
-| 1.1.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add CppUTest unit test target            |
-| 1.2.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add JUnit XML report output to build/    |
-| 1.3.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add lcov coverage target                 |
+| Version | Date       | Author                | Description                                        |
+|---------|------------|-----------------------|----------------------------------------------------|
+| 1.0.0   | 2026-04-09 | tjuphao               | Initial build with gcc, gprof profiling            |
+| 1.1.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add CppUTest unit test target                      |
+| 1.2.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add JUnit XML report output to build/              |
+| 1.3.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add lcov coverage target                           |
+| 1.4.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add MC/DC coverage target (make mcdc, GCC 14)      |
+| 1.5.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add subtract() with overflow/underflow detection   |

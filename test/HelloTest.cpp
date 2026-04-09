@@ -1,3 +1,17 @@
+/**
+ * @file HelloTest.cpp
+ * @brief CppUTest unit tests for hello.c (add, divide, subtract).
+ *
+ * Revision History:
+ * Version | Date       | Author                | Description
+ * --------|------------|-----------------------|--------------------------------------
+ * 1.0.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Initial tests for add() and divide()
+ * 1.1.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add subtract() tests with overflow,
+ *         |            |                       | underflow, and NULL pointer checks
+ * 1.2.0   | 2026-04-09 | tjuphao [AI-ASSISTED] | Add SubtractNegativeSubtrahendNoOverflow
+ *         |            |                       | to achieve 100% MC/DC branch coverage
+ */
+
 #include "CppUTest/TestHarness.h"
 
 extern "C" {
@@ -56,4 +70,10 @@ TEST(HelloGroup, SubtractUnderflowReturnsError) {
 TEST(HelloGroup, SubtractOverflowReturnsError) {
     INT_64 result = 0;
     CHECK_EQUAL(-1, subtract(INT64_MAX, -1, &result));
+}
+
+TEST(HelloGroup, SubtractNegativeSubtrahendNoOverflow) {
+    INT_64 result = 0;
+    CHECK_EQUAL(0, subtract(5, -3, &result));
+    CHECK_EQUAL(8, result);
 }
